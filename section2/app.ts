@@ -1,23 +1,20 @@
-// const person: {
-//   name: string;
-//   age: number;
-// } = {
-const person = {
-  name: "Maximilian",
-  age: 30,
-  hobbies: ["Sports", "Cooking"],
-};
+// unknown type
+let userInput: unknown;
+let userName: string;
 
-let favoriteActivities: string[];
-favoriteActivities = ["Sports"];
+userInput = 5;
+userInput = "Max";
 
-console.log(person.name);
-
-for (const hobby of person.hobbies) {
-  console.log(hobby.toUpperCase());
-  // console.log(hobby.map()); // !!! ERROR !!!
+// The unknown type is more restrictive than the any type.
+if (typeof userInput === "string") {
+  userName = userInput;
 }
 
-person.hobbies.map((hobby) => {
-  console.log(hobby.toUpperCase());
-});
+// userName = userInput; // Error: Type 'unknown' is not assignable to type 'string'.
+
+// Never Type
+const generateError = (message: string, code: number): never => {
+  throw { message: message, errorCode: code };
+};
+
+generateError("An error occurred!", 500); // This function never produces a return value.
