@@ -1,17 +1,23 @@
-class Department {
+// Abstract class can't generate an instance of itself
+abstract class Department {
+  static fiscalYear = 2020;
   // private readonly id: string;
   // private name: string;
-  private employees: string[] = [];
+  protected employees: string[] = [];
 
   // Shorthand initialization
-  constructor(private readonly id: string, public name: string) {
+  constructor(protected readonly id: string, public name: string) {
     // this.id = id;
     // this.name = name;
+    console.log(Department.fiscalYear);
   }
 
-  describe(this: Department) {
-    console.log(`Department (${this.id}): ${this.name}`);
+  static createEmployee(name: string) {
+    return { name: name };
   }
+
+  // Abstract method must be implemented in the derived class
+  abstract describe(this: Department): void;
 
   addEmployee(employee: string) {
     this.employees.push(employee);
@@ -28,21 +34,57 @@ class ITDepartment extends Department {
     super(id, "IT");
     this.admins = admins;
   }
+
+  describe() {
+    console.log("IT department - ID: " + this.id);
+  }
 }
 
 class AccountingDepartment extends Department {
+  private lastReport: string;
+
+  get mostRecentReport() {
+    if (this.lastReport) {
+      return this.lastReport;
+    }
+    throw new Error("No report found.");
+  }
+
+  set mostRecentReport(value: string) {
+    if (!value) {
+      throw new Error("Please pass in a valid value!");
+    }
+    this.addReport(value);
+  }
+
   constructor(id: string, private reports: string[]) {
     super(id, "Accounting");
+    this.lastReport = reports[0];
+  }
+
+  describe() {
+    console.log("Accounting department - ID: " + this.id);
+  }
+
+  addEmployee(name: string) {
+    if (name === "Max") {
+      return;
+    }
+    this.employees.push(name);
   }
 
   addReport(text: string) {
     this.reports.push(text);
+    this.lastReport = text;
   }
 
   printReports() {
     console.log(this.reports);
   }
 }
+
+const employee1 = Department.createEmployee("Max");
+console.log(employee1, Department.fiscalYear);
 
 // const accounting = new Department("d1", "Accounting");
 const it = new ITDepartment("d1", ["Max"]);
@@ -60,9 +102,19 @@ console.log(it);
 
 const accounting = new AccountingDepartment("d2", []);
 
-accounting.addReport("Something went wrong...");
+// Provoke the setter
+accounting.mostRecentReport = "Year End Report";
 
-accounting.printReports();
+accounting.addReport("Something went wrong...");
+// Provoke the getter
+console.log(accounting.mostRecentReport);
+
+accounting.addEmployee("Max");
+accounting.addEmployee("Manu");
+
+// accounting.printReports();
+// accounting.printEmployeeInformation();
+accounting.descript();
 
 // const accountingCopy = { name: "DUMMY", describe: accounting.describe };
 
