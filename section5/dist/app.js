@@ -9,9 +9,6 @@ class Department {
     static createEmployee(name) {
         return { name: name };
     }
-    describe() {
-        console.log(`Department (${this.id}): ${this.name}`);
-    }
     addEmployee(employee) {
         this.employees.push(employee);
     }
@@ -26,6 +23,9 @@ class ITDepartment extends Department {
         super(id, "IT");
         this.admins = admins;
         this.admins = admins;
+    }
+    describe() {
+        console.log("IT department - ID: " + this.id);
     }
 }
 class AccountingDepartment extends Department {
@@ -46,7 +46,14 @@ class AccountingDepartment extends Department {
         this.reports = reports;
         this.lastReport = reports[0];
     }
-    descript() {
+    static getInstance() {
+        if (AccountingDepartment.instance) {
+            return this.instance;
+        }
+        this.instance = new AccountingDepartment("d2", []);
+        return this.instance;
+    }
+    describe() {
         console.log("Accounting department - ID: " + this.id);
     }
     addEmployee(name) {
@@ -72,11 +79,12 @@ it.describe();
 it.name = "NEW NAME";
 it.printEmployeeInformation();
 console.log(it);
-const accounting = new AccountingDepartment("d2", []);
+const accounting = AccountingDepartment.getInstance();
+const accounting2 = AccountingDepartment.getInstance();
 accounting.mostRecentReport = "Year End Report";
 accounting.addReport("Something went wrong...");
 console.log(accounting.mostRecentReport);
 accounting.addEmployee("Max");
 accounting.addEmployee("Manu");
-accounting.descript();
+accounting.describe();
 //# sourceMappingURL=app.js.map
