@@ -23,7 +23,11 @@ type Numeric = number | boolean;
 
 type Universal = Combinable & Numeric;
 
-//
+//　Function Overloads
+function add(a: number, b: number): number;
+function add(a: string, b: string): string;
+function add(a: string, b: number): string;
+function add(a: number, b: string): string;
 function add(a: Combinable, b: Combinable) {
   // Type Guard
   if (typeof a === "string" || typeof b === "string") {
@@ -31,6 +35,27 @@ function add(a: Combinable, b: Combinable) {
   }
   return a + b;
 }
+
+const result = add("Max", " Schwarz");
+result.split(" ");
+
+// Optional Chaining
+const fetchedUserData = {
+  id: "u1",
+  name: "Max",
+  job: { title: "CEO", description: "My own company" },
+};
+// Vannila JS
+console.log(fetchedUserData.job && fetchedUserData.job.title);
+// TypeScript
+console.log(fetchedUserData?.job?.title);
+
+// Nullish Coalescing
+const userInput = null; // or undefined
+
+const storedData = userInput ?? "DEFAULT";
+
+console.log(storedData);
 
 type UnknownEmployee = Employee | Admin;
 
@@ -130,3 +155,5 @@ const errorBag: ErrorContainer = {
   email: "Not a valid email",
   username: "Must start with a character",
 };
+
+// Function Overloads
